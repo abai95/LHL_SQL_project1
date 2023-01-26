@@ -19,6 +19,9 @@ DROP COLUMN item_revenue,
 DROP COLUMN transaction_revenue,
 DROP COLUMN search_keyword;
 
+ALTER TABLE analytics
+DROP COLUMN user_id;
+
 ALTER TABLE all_sessions
 DROP COLUMN ecommerce_action_option,
 DROP COLUMN ecommerce_action_step,
@@ -34,6 +37,9 @@ ALTER TABLE all_sessions
 ALTER COLUMN product_price TYPE FLOAT,
 ALTER COLUMN total_transaction_revenue TYPE FLOAT;
 
+ALTER TABLE analytics
+ALTER COLUMN unit_price TYPE FLOAT
+
 UPDATE all_sessions
 SET product_price = ROUND((product_price / 1000000)::NUMERIC, 2)
 WHERE product_price IS NOT NULL;
@@ -42,6 +48,10 @@ UPDATE all_sessions
 SET total_transaction_revenue = ROUND((total_transaction_revenue / 
 	1000000)::NUMERIC, 2)
 WHERE total_transaction_revenue IS NOT NULL;
+
+UPDATE analytics
+SET unit_price = ROUND((unit_price / 1000000)::NUMERIC, 2)
+WHERE unit_price IS NOT NULL;
 ```
 
 Change date to DATE data type:
@@ -49,6 +59,9 @@ Change date to DATE data type:
 ``` sql
 ALTER TABLE all_sessions
 ALTER COLUMN session_date TYPE DATE USING (session_date::TEXT)::DATE;
+
+ALTER TABLE analytics
+ALTER COLUMN visit_date TYPE DATE USING (visit_date::TEXT)::DATE;
 ```
 
 There is whitespace in some values for product_sku in all_sessions. I'll also run the same query to remove them for other applicable tables.
@@ -128,6 +141,6 @@ ADD CONSTRAINT analytics_id
 PRIMARY KEY(analytics_id);
 
 ALTER TABLE all_sessions
-ADD CONSTRAINT session_id
+ADD CONSTRAINT pk_session_id
 PRIMARY KEY(session_id);
 ```
