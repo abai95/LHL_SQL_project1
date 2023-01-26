@@ -1,11 +1,15 @@
 # Final-Project-Transforming-and-Analyzing-Data-with-SQL
 
 ## Project/Goals
-(fill in your description and goals here)
+My goal is to learn how to normalize data effectively to streamline data analysis down the road. I will also learn how to push commits to GitHub.
 
 ## Process
-### (your step 1)
-### (your step 2)
+- Download and look through the CSV files to familiarize myself with the data
+- Import data into tables
+- Using PgAdmin4, clean and normalize the data according to normal forms
+- Generate the ERD
+- QA the data
+- Answer questions
 
 ## Results
 (fill in what you discovered this data could tell you and how you used the data to answer those questions)
