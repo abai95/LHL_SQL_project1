@@ -132,6 +132,34 @@ SET currency_code = 'USD'
 WHERE currency_code IS NULL;
 ```
 
+# Removing non-matching Rows
+
+## Product SKUs
+There are many product_sku values present in the all_sessions table that do not exist in the products, sales_by_sku, and sales_report tables, so I removed those rows. I also removed one more row whose product_sku vale does not exist in only the products table:
+
+``` sql
+CREATE TEMP TABLE temp_all_sessions AS (
+	SELECT *
+	FROM all_sessions
+);
+
+WITH all_sku AS (
+	SELECT DISTINCT product_sku
+	FROM products
+	UNION
+	SELECT DISTINCT product_sku
+	FROM sales_by_sku
+)
+
+DELETE FROM temp_all_sessions
+WHERE product_sku NOT IN (SELECT * FROM all_sku);
+
+DELETE FROM temp_all_sessions
+WHERE product_sku = '9184677';
+```
+
+After verifying the results through a temporary table, apply the changes to the actual table.
+
 # Add Primary/Reference Keys
 I added an autoincrementing analytics_id and session_id columns to the analytics and all_sessions tables through PgAdmin 4 menus and made them the primary key
 
@@ -145,6 +173,15 @@ REFERENCES sales_by_sku(product_sku);
 
 ALTER TABLE sales_report
 ADD CONSTRAINT fk_sales_report_products
+FOREIGN KEY (product_sku)
+REFERENCES products(product_sku);
+```
+
+I set product_sku in all_sessions as the foreign key referencing product_sku in products.
+
+``` sql
+ALTER TABLE all_sessions
+ADD CONSTRAINT fk_all_sessions_products
 FOREIGN KEY (product_sku)
 REFERENCES products(product_sku);
 ```
