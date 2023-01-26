@@ -133,14 +133,18 @@ WHERE currency_code IS NULL;
 ```
 
 # Add Primary/Reference Keys
-I added an autoincrementing analytics_id and session_id columns to the analytics and all_sessions tables through PgAdmin 4 menus then made it the primary key:
+I added an autoincrementing analytics_id and session_id columns to the analytics and all_sessions tables through PgAdmin 4 menus and made them the primary key
+
+I set the product_sku columns of the products, sales_report, and sales_by_sku tables as the primary key through PgAdmin 4 menus and also set the product_sku column for sales_report as a foreign key referencing both of the product_sku columns for products and sales_by_sku:
 
 ``` sql
-ALTER TABLE analytics
-ADD CONSTRAINT analytics_id
-PRIMARY KEY(analytics_id);
+ALTER TABLE sales_report
+ADD CONSTRAINT fk_sales_report_sales_by_sku
+FOREIGN KEY (product_sku)
+REFERENCES sales_by_sku(product_sku);
 
-ALTER TABLE all_sessions
-ADD CONSTRAINT pk_session_id
-PRIMARY KEY(session_id);
+ALTER TABLE sales_report
+ADD CONSTRAINT fk_sales_report_products
+FOREIGN KEY (product_sku)
+REFERENCES products(product_sku);
 ```
