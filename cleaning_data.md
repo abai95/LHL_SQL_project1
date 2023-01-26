@@ -1,11 +1,14 @@
-## What issues will you address by cleaning the data?
+# What issues will you address by cleaning the data?
 - There should only be a single value per entry
 - Data should be properly formatted
 - Unecessary rows/columns should be removed
 - Fill in missing values when appropriate
 - Add primary and reference keys
 
-## Queries:
+# Queries:
+
+## Preliminary Data Cleaning
+
 Drop empty columns:
 
 ``` sql
@@ -40,3 +43,36 @@ Change date to DATE data type:
 ALTER TABLE all_sessions
 ALTER COLUMN session_date TYPE DATE USING (session_date::TEXT)::DATE;
 ```
+
+Perusing through every table, there already are only one single value per entry
+
+# Fill in Missing Values
+
+## Country/City
+Check for missing countries or cities:
+
+``` sql
+SELECT country
+FROM all_sessions
+GROUP BY country
+ORDER BY country;
+
+SELECT city
+FROM all_sessions
+GROUP BY city
+ORDER BY city;
+```
+There are no NULL values, but some entries are listed as "not available in demo dataset" or "(not set)". There is no reason to try and fill in values for cities.
+
+``` sql
+SELECT country,
+	   city
+FROM all_sessions
+WHERE country = '(not set)'
+GROUP BY country,
+		 city
+ORDER BY country,
+		 city;
+```
+
+All entries with missing countries also don't have listed cities, so no values can be filled in.
