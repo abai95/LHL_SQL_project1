@@ -71,10 +71,10 @@ ORDER BY average_sold DESC;
 Answer:
 Countries only:
 
-![](images/country_avg.png)
+![](Images/country_avg.png)
 
 Cities and Countries:
-![](images/city_avg.png)
+![](Images/city_avg.png)
 
 
 
@@ -102,7 +102,7 @@ ORDER BY sales DESC;
 
 Answer:
 Perusing the results, it seems T-shirts and YouTube purchases are very popular across most countries
-![](images/prod_category.png)
+![](Images/prod_category.png)
 
 
 
@@ -159,11 +159,11 @@ I generaly see Google products being the most popular.
 
 Country:
 
-![](images/ranked_country_products.png)
+![](Images/ranked_country_products.png)
 
 City:
 
-![](images/ranked_city_products.png)
+![](Images/ranked_city_products.png)
 
 
 
