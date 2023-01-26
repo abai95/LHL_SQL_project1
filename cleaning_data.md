@@ -160,6 +160,24 @@ WHERE product_sku = '9184677';
 
 After verifying the results through a temporary table, apply the changes to the actual table.
 
+## visit_id and full_visitor_id
+A similar issue is present with these two columns as well between all_sessions and analytics.
+
+```sql
+CREATE TEMP TABLE temp_analytics AS (
+	SELECT *
+	FROM analytics
+);
+
+DELETE FROM temp_analytics
+WHERE visit_id NOT IN (SELECT visit_id
+					   FROM all_sessions)
+	  AND full_visitor_id NOT IN (SELECT full_visitor_id
+								  FROM all_sessions);
+```
+
+After verifying the results through a temporary table, apply the changes to the actual table.
+
 # Add Primary/Reference Keys
 I added an autoincrementing analytics_id and session_id columns to the analytics and all_sessions tables through PgAdmin 4 menus and made them the primary key
 
@@ -184,4 +202,29 @@ ALTER TABLE all_sessions
 ADD CONSTRAINT fk_all_sessions_products
 FOREIGN KEY (product_sku)
 REFERENCES products(product_sku);
+```
+
+Both visit_id and full_visitor_id are non-unique, so I added a foreign key session_id column to analytics to reference the primary key session_id in all_sessions
+
+``` sql
+ALTER TABLE temp_analytics
+ADD COLUMN session_id INT NOT NULL DEFAULT 0;
+
+UPDATE temp_analytics
+SET session_id = all_sessions.session_id
+FROM all_sessions
+WHERE temp_analytics.visit_id = all_sessions.visit_id;
+
+UPDATE temp_analytics
+SET session_id = all_sessions.session_id
+FROM all_sessions
+WHERE temp_analytics.full_visitor_id = all_sessions.full_visitor_id;
+```
+I had trouble using an OR statement in the WHERE clause for setting the values for the newly created all_sessions column in the temporary table, so I did it in two separate queries. After verifying the results, apply the changes to the actual table. Use session_id in analytics as a foreign key to session_id in all_sessions.
+
+``` sql
+ALTER TABLE analytics
+ADD CONSTRAINT fk_analytics_all_sessions_session_id
+FOREIGN KEY (session_id)
+REFERENCES all_sessions(session_id);
 ```
