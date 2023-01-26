@@ -118,3 +118,16 @@ UPDATE all_sessions
 SET currency_code = 'USD'
 WHERE currency_code IS NULL;
 ```
+
+# Add Primary/Reference Keys
+I added an autoincrementing analytics_id and session_id columns to the analytics and all_sessions tables through PgAdmin 4 menus then made it the primary key:
+
+``` sql
+ALTER TABLE analytics
+ADD CONSTRAINT analytics_id
+PRIMARY KEY(analytics_id);
+
+ALTER TABLE all_sessions
+ADD CONSTRAINT session_id
+PRIMARY KEY(session_id);
+```
