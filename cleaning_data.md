@@ -9,7 +9,7 @@
 
 ## Preliminary Data Cleaning
 
-Drop empty columns:
+Drop empty columns. Also drop irrelevant columns:
 
 ``` sql
 ALTER TABLE all_sessions
@@ -18,6 +18,13 @@ DROP COLUMN item_quantity,
 DROP COLUMN item_revenue,
 DROP COLUMN transaction_revenue,
 DROP COLUMN search_keyword;
+
+ALTER TABLE all_sessions
+DROP COLUMN ecommerce_action_option,
+DROP COLUMN ecommerce_action_step,
+DROP COLUMN ecommerce_action_type,
+DROP COLUMN page_path_level1,
+DROP COLUMN page_title;
 ```
 
 Divide price related columns by 1,000,000 and format:
