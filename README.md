@@ -15,7 +15,7 @@ My goal is to learn how to normalize data effectively to streamline data analysi
 (fill in what you discovered this data could tell you and how you used the data to answer those questions)
 
 ## Challenges 
-(discuss challenges you faced in the project)
+Trying to figure out the correct primary keys to use for each table was a little challenging, especially when certain values in a column I want to use as a foreign key are not present in the primary key of another table. I had to go back to the data cleaning step a few times to remedy this. As a result a lot of data is lost which will affect future analysis down the line.
 
 ## Future Goals
 (what would you do if you had more time?)
