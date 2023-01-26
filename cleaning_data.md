@@ -44,6 +44,22 @@ ALTER TABLE all_sessions
 ALTER COLUMN session_date TYPE DATE USING (session_date::TEXT)::DATE;
 ```
 
+There is whitespace in some values for product_sku in all_sessions. I'll also run the same query to remove them for other applicable tables.
+
+``` sql
+UPDATE all_sessions
+SET product_sku = REPLACE(product_sku, ' ', '');
+
+UPDATE products
+SET sku = REPLACE(sku, ' ', '');
+
+UPDATE sales_by_sku
+SET product_sku = REPLACE(product_sku, ' ', '');
+
+UPDATE sales_report
+SET product_sku = REPLACE(product_sku, ' ', '');
+```
+
 Perusing through every table, there already are only one single value per entry
 
 # Fill in Missing Values
@@ -76,3 +92,22 @@ ORDER BY country,
 ```
 
 All entries with missing countries also don't have listed cities, so no values can be filled in.
+
+## Currency Code
+Check for missing values:
+
+``` sql
+SELECT currency_code as cc,
+	   COUNT(*)
+FROM all_sessions
+GROUP BY cc
+ORDER BY cc;
+```
+
+The only non NULL value is 'USD', so I filled the rest of the entries as such.
+
+``` sql
+UPDATE all_sessions
+SET currency_code = 'USD'
+WHERE currency_code IS NULL;
+```
